@@ -38,3 +38,24 @@ OS: **Ubuntu 20.04**
 - ```
   docker-compose down
   ```
+
+## Эндпоинты
+1) Сохранить короткое представление заданного URL
+   - ```
+       endpoint: localhost:3000/v1/data/shorten
+       method: POST
+       request: {
+              "long_url": "string",
+              "custom_url_name": "string" (не реализовано, находится в статусе hold)
+       }
+       response: {
+              "short_url": string"
+       }
+     ```
+2) Перейти по сохраненному ранее короткому представлению и получить redirect на соответствующий исходный URL. (проверил в google chrome, все работает)
+   - ```
+       endpoint: http://localhost:3000/здесь-короткий-адрес (пример: http://localhost:3333/tSSFQNP)
+       method: GET
+       request: {}
+       response: {}
+     ```
