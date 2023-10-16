@@ -1,0 +1,44 @@
+version: '3.3'
+services:
+  web-server:
+    container_name: web-server
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    command: >
+      sh -c "npm run start"
+    depends_on:
+      - mongodb
+      - redis
+    environment:
+      - BASE=http://localhost:3000
+      - DB_HOST=database
+      - DB_USER=user
+      - DB_PASSWORD=123456
+      - DB_NAME=url_shortener
+      - DB_PORT=27017
+      - REDIS_URL=redis://redis:6379
+
+  mongodb:
+    container_name: database
+    image: mongo:latest
+    volumes:
+      - mongodb-data:/data/db
+      - ./docker-entrypoint-initdb.d/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+    ports:
+      - '27017:27017'
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=password
+      - MONGO_INITDB_DATABASE=admin
+
+  redis:
+    container_name: redis
+    image: redis:7.2.1-alpine
+    ports:
+      - '6379:6379'
+
+volumes:
+  mongodb-data:
