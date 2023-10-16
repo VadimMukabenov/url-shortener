@@ -45,7 +45,7 @@ OS: **Ubuntu 20.04**
        endpoint: localhost:3000/v1/data/shorten
        method: POST
        request: {
-              "long_url": "string",
+              "longUrl": "string",
               "custom_url_name": "string" (не реализовано, находится в статусе hold)
        }
        response: {
