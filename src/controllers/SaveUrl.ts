@@ -11,7 +11,9 @@ class SaveUrlController {
     }
 
     async run(req: IRequest, res: IResponse) {
+        // TODO. Add validation
         const longUrl = req.body.longUrl as string;
+        const customUrl = req.body.custom_url as string;
 
         const urlId = new Date().getTime(); // аналог nanoid и прочим. 
         // Плюсы: дает уникальное значение, не требует дополнительных библиотек
@@ -21,10 +23,21 @@ class SaveUrlController {
                 let url = await Url.findOne({ longUrl });
                 let shortUrl = '';
             if (url) {
-                shortUrl = this.getShortUrl(url.shortUrl); 
+                shortUrl = this.getShortUrlWithDomain(url.shortUrl); 
                 res.send({ data: { short_url: shortUrl }});
             } else {
-                shortUrl = base62.encode(urlId);
+                if (customUrl) {
+                    const result = await Url.findOne({ shortUrl: customUrl });
+                    
+                    if (result) {
+                        return res.send({ data: 'Это кастомный URL уже занят', status: 500 });
+                    }
+
+                    shortUrl = customUrl;
+                } else {
+                    shortUrl = base62.encode(urlId);
+                }
+                
 
                 url = new Url({
                     longUrl,
@@ -35,7 +48,7 @@ class SaveUrlController {
                 await url.save();
                 res.send({ 
                     data: { 
-                        short_url: this.getShortUrl(shortUrl)
+                        short_url: this.getShortUrlWithDomain(shortUrl)
                     } 
                 });
             }
@@ -48,9 +61,9 @@ class SaveUrlController {
         }
     }
 
-    getShortUrl(decodedString: string) {
-        const { BASE } = this.config;
-        return `${BASE}/${decodedString}`;
+    getShortUrlWithDomain(decodedString: string) {
+        const { BASE: domain } = this.config;
+        return `${domain}/${decodedString}`;
     }
 }
 
