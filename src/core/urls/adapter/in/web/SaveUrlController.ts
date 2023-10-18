@@ -12,31 +12,35 @@ class SaveUrlController {
     }
     
     async run(req: IRequest, res: IResponse) {
-        const { long_url: longUrl, custom_url: customUrl } = req.body as { long_url: string, custom_url: string };
-        const isValid = await validateSchema({ 
-            long_url: longUrl, 
-            custom_url: customUrl
-        }, SaveUrlSchema);
+        try {
+            const { long_url: longUrl, custom_url: customUrl } = req.body as { long_url: string, custom_url: string };
+            const isValid = await validateSchema({ 
+                long_url: longUrl, 
+                custom_url: customUrl
+            }, SaveUrlSchema);
+    
+            if (!validateUrl(longUrl)) {
+                throw new Error('Invalid Original Url');
+            }
 
-        if (!validateUrl(longUrl)) {
-            return res.send({ data: 'Invalid Original Url', status: 400 });
-        }
-
-        if (isValid) {
-            try {
+            if (isValid) {
                 const { shortUrl } = await this._saveUrlService.run(longUrl, customUrl);
                 res.send({ data: { short_url: shortUrl }});
-            } catch (err: unknown) {
-                if(err instanceof Error) {
-                    res.send({ data: err.message, status: 500 });
-                }
-                
-                // res.send({ data: 'Это кастомный URL уже занят', status: 500 });
             }
+        } catch (err: unknown) {
+            if(err instanceof Error) {
+                res.send({ 
+                    data: {
+                        name: err.name,
+                        message: err.message,
+                    }, 
+                    status: 500 
+                });
+            }
+            
+            // res.send({ data: 'Это кастомный URL уже занят', status: 500 });
         }
     }
-
-    
 }
 
 export default SaveUrlController;

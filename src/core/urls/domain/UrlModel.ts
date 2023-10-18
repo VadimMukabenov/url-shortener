@@ -14,7 +14,7 @@ export class UrlModel {
         this._longUrl = input.longUrl;
     }
 
-    get id() {
+    get urlId() {
         return this._urlId;
     }
 

@@ -1,5 +1,5 @@
-import yup from 'yup';
+import { string } from 'yup';
 
-const schema = yup.string().required().min(1).max(7);
+const schema = string().required().min(1).max(7);
 
 export default schema;

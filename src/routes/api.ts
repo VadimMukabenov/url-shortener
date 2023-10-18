@@ -2,7 +2,7 @@ import { Router } from "../my-express-clone";
 
 import { UrlAdapters } from  "../core/urls/adapter/DI";
 
-export function Routing(input: Pick<UrlAdapters, 'controllers'>) {
+export default function Routing(input: Pick<UrlAdapters, 'controllers'>) {
     const router = new Router();
     const { SaveUrlController, RedirectUrlController } = input.controllers;
 
