@@ -33,6 +33,9 @@ OS: **Ubuntu 20.04**
   * Deploy - есть мысль написать Ansible script и Github Actions для ci/cd (тесты, линтеры) и задеплоить на VPS. Наверняка придется пободаться с сертификатами
 
 ## Команды для запуска сервиса
+
+На данный момент актуальная ветка это ```dev```.
+
 Старт: 
 - ```
   docker-compose up
@@ -44,13 +47,13 @@ OS: **Ubuntu 20.04**
   ```
 
 ## Эндпоинты
-1) Сохранить короткое представление заданного URL
+1) Сохранить короткое представление заданного URL. ```custom_url``` - это строка от 1 до 7 символов, является необязательным
    - ```
        endpoint: localhost:3000/v1/data/shorten
        method: POST
        request: {
-              "longUrl": "string",
-              "custom_url_name": "string" (не реализовано, находится в статусе hold)
+              "long_url": "string",
+              "custom_url": "string"
        }
        response: {
               "short_url": string"
