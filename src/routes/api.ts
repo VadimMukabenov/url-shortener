@@ -1,15 +1,18 @@
-import SaveUrl from "../controllers/SaveUrl";
-import RedirectUrl from "../controllers/RedirectUrl";
 import { Router } from "../my-express-clone";
 
-const router = new Router();
+import { UrlAdapters } from  "../core/urls/adapter/DI";
 
-router.post('/v1/data/shorten', (req, res) => {
-    SaveUrl.run(req, res);
-});
+export default function Routing(input: Pick<UrlAdapters, 'controllers'>) {
+    const router = new Router();
+    const { SaveUrlController, RedirectUrlController } = input.controllers;
 
-router.get('/:shortUrl', (req, res) => {
-    RedirectUrl.run(req, res);
-});
+    router.post('/v1/data/shorten', async (req, res) => {
+        await SaveUrlController.run(req, res);
+    });
+    
+    router.get('/:shortUrl', async (req, res) => {
+        await RedirectUrlController.run(req, res);
+    });
 
-export default router;
+    return router;
+}
