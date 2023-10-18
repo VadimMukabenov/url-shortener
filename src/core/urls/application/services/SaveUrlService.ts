@@ -6,8 +6,8 @@ import { UrlModel } from "../../domain/UrlModel";
 import { UrlRepository } from "../port/out/UrlRepository";
 
 class SaveUrlService implements SaveUrlUseCase {
-    config: Config;
-    _urlRepository: UrlRepository;
+    private readonly config: Config;
+    private readonly _urlRepository: UrlRepository;
     constructor(urlRepository: UrlRepository) {
         this.config = getConfig();
         this._urlRepository = urlRepository;
@@ -57,7 +57,7 @@ class SaveUrlService implements SaveUrlUseCase {
         }
     }
 
-    getShortUrlWithDomain(decodedString: string) {
+    private getShortUrlWithDomain(decodedString: string) {
         const { BASE: domain } = this.config;
         return `${domain}/${decodedString}`;
     }
